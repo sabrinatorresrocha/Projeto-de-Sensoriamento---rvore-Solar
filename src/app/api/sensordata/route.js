@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
+import { put } from '@vercel/blob';
 import path from 'path';
 
 const HORA_INICIO = 5;
@@ -57,11 +58,23 @@ export async function POST(request) {
 
         const linhaCSV = `${dataFormatada},${horaFormatada},${tensaoFormatada},${correnteFormatada},${potenciaFormatada}\n`;
 
-        // 5. Salva os dados no arquivo CSV
-        await fs.appendFile(path.join(PASTA_DE_DADOS_ABSOLUTA, nomeArquivoCSV), linhaCSV);
+        // 5. Salva os dados no Vercel Blob
+        const nomeArquivoBlob = `dados_${dataFormatada}.csv`;
 
+        try {
+            await put(nomeArquivoBlob, linhaCSV, {
+                access: 'public',
+                append: true, // Isto anexa os dados ao ficheiro, em vez de o substituir
+                token: process.env.BLOB_READ_WRITE_TOKEN // Token de acesso
+            });
+            
         // 6. Retorna uma resposta de sucesso
-        return NextResponse.json({ message: `Dados do Sensor ${sensorId} recebidos e SALVOS com sucesso!` }, { status: 200 });
+            return NextResponse.json({ message: `Dados do Sensor ${sensorId} recebidos e SALVOS com sucesso!` }, { status: 200 });
+
+        } catch (error) {
+            console.error('Erro ao salvar no Vercel Blob:', error);
+            return NextResponse.json({ message: 'Erro ao processar a requisição no Blob.' }, { status: 500 });
+        }
 
     } catch (error) {
         console.error('Erro no POST da API:', error);
