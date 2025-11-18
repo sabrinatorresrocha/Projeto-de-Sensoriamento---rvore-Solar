@@ -1,8 +1,8 @@
-Projeto de Monitoramento Solar em Tempo Real
+# Projeto de Monitoramento Solar em Tempo Real
 
 Aplicação web full-stack para o monitoramento do desempenho de painéis solares, utilizando um ESP32 para a coleta de dados e um dashboard web construído com Next.js para a visualização.
 
-Como Funciona
+## Como Funciona
 
 1.  **Hardware (ESP32):** Um ESP32 lê os dados de tensão e corrente de um sensor (ex: INA219) conectado ao painel solar.
 2.  **Envio de Dados:** O ESP32 envia os dados via `POST` HTTP para a API da aplicação a cada segundo.
