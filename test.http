@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/sensordata
+Content-Type: application/json
+
+{
+  "tensao": 900.0,
+  "corrente": 1.0,
+  "id_sensor": 1
+
+}
